@@ -42,7 +42,9 @@ export async function sendContact(_prev: ContactResult | null, formData: FormDat
 
     const { error } = await resend.emails.send({
       from,
-      to: [site.email],
+      // Resend compara el destinatario de forma exacta contra el correo dueño
+      // de la cuenta; lo normalizamos a minúsculas para evitar el error 403.
+      to: [site.email.toLowerCase()],
       replyTo: email,
       subject: `Nueva consulta de ${name} — ${site.shortName}`,
       text: `Nombre: ${name}\nCorreo: ${email}\n\nMensaje:\n${message}`,
@@ -60,6 +62,7 @@ export async function sendContact(_prev: ContactResult | null, formData: FormDat
     })
 
     if (error) {
+      console.log("[v0] Resend send error:", JSON.stringify(error))
       return { ok: false, error: "No se pudo enviar el correo. Intenta de nuevo o escríbenos por WhatsApp." }
     }
     return { ok: true }

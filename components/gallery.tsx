@@ -3,27 +3,11 @@
 import { useCallback, useEffect, useState } from "react"
 import useSWR from "swr"
 import useEmblaCarousel from "embla-carousel-react"
-import { X, ChevronLeft, ChevronRight, Download, ImageOff, Loader2, ArrowRight, Images } from "lucide-react"
+import { X, ChevronLeft, ChevronRight, Download, ImageOff, Loader2, ArrowRight, Images, FolderDown } from "lucide-react"
 import { fetchEvents } from "@/lib/data"
 import type { GalleryEvent } from "@/lib/types"
+import { downloadImage, downloadAlbum } from "@/lib/download"
 import Link from "next/link"
-
-async function downloadImage(url: string, filename: string) {
-  try {
-    const res = await fetch(url, { mode: "cors" })
-    const blob = await res.blob()
-    const objectUrl = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = objectUrl
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    URL.revokeObjectURL(objectUrl)
-  } catch {
-    window.open(url, "_blank")
-  }
-}
 
 export function Gallery() {
   const { data: events, isLoading } = useSWR<GalleryEvent[]>("events", fetchEvents)
@@ -140,6 +124,19 @@ export function AlbumCard({
 function Lightbox({ event, onClose }: { event: GalleryEvent; onClose: () => void }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [selected, setSelected] = useState(0)
+  const [zipping, setZipping] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  const handleDownloadAlbum = useCallback(async () => {
+    if (zipping) return
+    setZipping(true)
+    setProgress(0)
+    try {
+      await downloadAlbum(event, (done, total) => setProgress(Math.round((done / total) * 100)))
+    } finally {
+      setZipping(false)
+    }
+  }, [event, zipping])
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
@@ -229,7 +226,7 @@ function Lightbox({ event, onClose }: { event: GalleryEvent; onClose: () => void
         )}
       </div>
 
-      <div className="flex items-center justify-center px-5 py-5">
+      <div className="flex flex-wrap items-center justify-center gap-3 px-5 py-5">
         <button
           type="button"
           onClick={() =>
@@ -242,6 +239,24 @@ function Lightbox({ event, onClose }: { event: GalleryEvent; onClose: () => void
         >
           <Download className="size-4" />
           Descargar esta foto
+        </button>
+        <button
+          type="button"
+          onClick={handleDownloadAlbum}
+          disabled={zipping}
+          className="flex items-center gap-2 rounded-full border border-background/25 px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-background/10 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {zipping ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Preparando… {progress}%
+            </>
+          ) : (
+            <>
+              <FolderDown className="size-4" />
+              Descargar este álbum
+            </>
+          )}
         </button>
       </div>
     </div>
