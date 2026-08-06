@@ -51,7 +51,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
-      {/* v0 - built-with badge */}
+{/* v0 - built-with badge */}
   <div dangerouslySetInnerHTML={{ __html: `<div id="v0-built-with-button-42b3fcd3-e759-4d12-89cc-81c008b408ad" style="
 border: 1px solid hsl(0deg 0% 100% / 12%);
 position: fixed;
