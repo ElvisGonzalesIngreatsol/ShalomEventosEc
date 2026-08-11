@@ -1,4 +1,5 @@
 import { site, navLinks } from "@/lib/site"
+import Image from "next/image"
 
 function Instagram({ className }: { className?: string }) {
   return (
@@ -24,14 +25,18 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
         <div className="grid gap-10 md:grid-cols-3">
           <div>
-            <p className="font-serif text-2xl font-semibold">{site.shortName}</p>
-            <p className="text-sm uppercase tracking-[0.25em] text-primary-foreground/70">
-              Recepciones & Eventos
-            </p>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/80">
-              {site.tagline}.
-            </p>
-          </div>
+  {/* Reemplaza los <p> de site.shortName y Recepciones & Eventos por esto: */}
+  <Image
+    src="/images/logo-shalom-white.png" // Ruta de tu logo en la carpeta public
+    alt="Shalom Recepciones & Eventos"
+    width={180}
+    height={60}
+    className="h-12 w-auto object-contain"
+  />
+  <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/80">
+    {site.tagline}.
+  </p>
+</div>
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wide text-primary-foreground/70">
