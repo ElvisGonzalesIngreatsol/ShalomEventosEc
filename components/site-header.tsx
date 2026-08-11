@@ -30,11 +30,11 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
         <a href="#inicio" className="flex items-center gap-2">
   <Image
-    src="/images/logo-shalom.png" // Ruta de tu logo en la carpeta public
+    src="/images/logo-shalom.png"
     alt="Shalom Recepciones & Eventos"
-    width={200} // Ajusta el ancho según necesites
-    height={70} // Ajusta el alto según necesites
-    className="h-10 w-auto object-contain" // Mantiene la proporción
+    width={280}
+    height={100}
+    className="h-14 md:h-16 w-auto object-contain"
     priority
   />
 </a>

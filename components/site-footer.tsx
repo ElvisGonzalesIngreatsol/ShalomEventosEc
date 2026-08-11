@@ -25,13 +25,12 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
         <div className="grid gap-10 md:grid-cols-3">
           <div>
-  {/* Reemplaza los <p> de site.shortName y Recepciones & Eventos por esto: */}
   <Image
-    src="/images/logo-shalom-white.png" // Ruta de tu logo en la carpeta public
+    src="/images/logo-shalom-white.png"
     alt="Shalom Recepciones & Eventos"
-    width={240}
-    height={80}
-    className="h-12 w-auto object-contain"
+    width={320}
+    height={120}
+    className="h-20 md:h-24 w-auto object-contain"
   />
   <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-foreground/80">
     {site.tagline}.
