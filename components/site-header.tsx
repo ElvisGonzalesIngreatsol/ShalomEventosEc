@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { site, navLinks, whatsappUrl } from "@/lib/site"
+import Image from "next/image"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
@@ -27,24 +28,16 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-        <a href="#inicio" className="flex flex-col leading-none">
-          <span
-            className={cn(
-              "font-serif text-xl font-semibold tracking-tight transition-colors",
-              scrolled ? "text-foreground" : "text-background",
-            )}
-          >
-            {site.shortName}
-          </span>
-          <span
-            className={cn(
-              "text-[10px] font-medium uppercase tracking-[0.25em] transition-colors",
-              scrolled ? "text-muted-foreground" : "text-background/70",
-            )}
-          >
-            Recepciones & Eventos
-          </span>
-        </a>
+        <a href="#inicio" className="flex items-center gap-2">
+  <Image
+    src="/images/logo-shalom-white.png" // Ruta de tu logo en la carpeta public
+    alt="Shalom Recepciones & Eventos"
+    width={160} // Ajusta el ancho según necesites
+    height={50} // Ajusta el alto según necesites
+    className="h-10 w-auto object-contain" // Mantiene la proporción
+    priority
+  />
+</a>
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
