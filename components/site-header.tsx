@@ -32,8 +32,8 @@ export function SiteHeader() {
   <Image
     src="/images/logo-shalom.png" // Ruta de tu logo en la carpeta public
     alt="Shalom Recepciones & Eventos"
-    width={160} // Ajusta el ancho según necesites
-    height={50} // Ajusta el alto según necesites
+    width={200} // Ajusta el ancho según necesites
+    height={70} // Ajusta el alto según necesites
     className="h-10 w-auto object-contain" // Mantiene la proporción
     priority
   />

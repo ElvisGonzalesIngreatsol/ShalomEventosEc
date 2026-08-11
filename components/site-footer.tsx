@@ -29,7 +29,7 @@ export function SiteFooter() {
   <Image
     src="/images/logo-shalom-white.png" // Ruta de tu logo en la carpeta public
     alt="Shalom Recepciones & Eventos"
-    width={200}
+    width={240}
     height={80}
     className="h-12 w-auto object-contain"
   />
