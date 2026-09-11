@@ -6,13 +6,15 @@ import { Gallery } from "@/components/gallery"
 import { Testimonials } from "@/components/testimonials"
 import { Contact } from "@/components/contact"
 import { SiteFooter } from "@/components/site-footer"
+import { AdvertisingRails } from "@/components/advertising-rails"
 
 export default function Page() {
   return (
     <>
       <SiteHeader />
-      <main>
+      <main className="relative">
         <Hero />
+        <AdvertisingRails />
         <About />
         <Services />
         <Gallery />

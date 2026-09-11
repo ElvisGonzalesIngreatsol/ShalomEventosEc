@@ -23,3 +23,22 @@ export type Testimonial = {
   approved: boolean
   createdAt?: number
 }
+
+export type SiteImage = {
+  id: string
+  title: string
+  url: string
+  storagePath?: string
+  active: boolean
+  order: number
+  createdAt?: number
+}
+
+export type HeroSlide = SiteImage & {
+  subtitle?: string
+}
+
+export type AdvertisingImage = SiteImage & {
+  link?: string
+  placement: "left" | "right"
+}

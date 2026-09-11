@@ -48,19 +48,18 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.01 330);
 
-  /* Deep plum / wine — the brand color */
-  --primary: oklch(0.36 0.09 348);
-  --primary-foreground: oklch(0.99 0.004 90);
+  /* Shalom palette: gold, black, white and beige */
+  --primary: oklch(0.28 0.025 70);
+  --primary-foreground: oklch(0.98 0.01 90);
 
-  --secondary: oklch(0.96 0.006 340);
-  --secondary-foreground: oklch(0.3 0.03 348);
+  --secondary: oklch(0.94 0.025 85);
+  --secondary-foreground: oklch(0.24 0.02 70);
 
-  --muted: oklch(0.96 0.005 340);
-  --muted-foreground: oklch(0.5 0.02 340);
+  --muted: oklch(0.95 0.018 85);
+  --muted-foreground: oklch(0.45 0.025 70);
 
-  /* Champagne gold accent — used sparingly */
-  --accent: oklch(0.82 0.08 82);
-  --accent-foreground: oklch(0.28 0.04 60);
+  --accent: oklch(0.76 0.13 82);
+  --accent-foreground: oklch(0.2 0.025 70);
 
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.9 0.006 340);

@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage"
 import { db, storage, isFirebaseConfigured } from "./firebase"
-import type { GalleryEvent, Testimonial, EventPhoto } from "./types"
+import type { GalleryEvent, Testimonial, EventPhoto, HeroSlide, AdvertisingImage } from "./types"
 import { sampleEvents, sampleTestimonials } from "./sample-data"
 
 /* -------------------------- Gallery events -------------------------- */
@@ -82,6 +82,44 @@ export async function deleteEventPhoto(
   const coverUrl = event.coverUrl === photo.url ? photos[0]?.url || "" : event.coverUrl
   await updateDoc(doc(db, "events", event.id), { photos, coverUrl })
   return { ...event, photos, coverUrl }
+}
+
+/* -------------------------- Site media -------------------------- */
+
+export async function fetchHeroSlides(): Promise<HeroSlide[]> {
+  if (!isFirebaseConfigured || !db) return []
+  const snap = await getDocs(query(collection(db, "heroSlides"), orderBy("order", "asc")))
+  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<HeroSlide, "id">) })).filter((s) => s.active)
+}
+
+export async function fetchAdvertisements(): Promise<AdvertisingImage[]> {
+  if (!isFirebaseConfigured || !db) return []
+  const snap = await getDocs(query(collection(db, "advertisements"), orderBy("order", "asc")))
+  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<AdvertisingImage, "id">) })).filter((a) => a.active)
+}
+
+export async function uploadSiteImage(
+  collectionName: "heroSlides" | "advertisements",
+  file: File,
+  data: Omit<HeroSlide, "id" | "url" | "storagePath"> | Omit<AdvertisingImage, "id" | "url" | "storagePath">,
+): Promise<void> {
+  if (!isFirebaseConfigured || !db || !storage) throw new Error("Firebase no está configurado")
+  const path = `site/${collectionName}/${Date.now()}-${file.name}`
+  const storageRef = ref(storage, path)
+  await uploadBytes(storageRef, file)
+  const url = await getDownloadURL(storageRef)
+  await addDoc(collection(db, collectionName), { ...data, url, storagePath: path, createdAt: Date.now() })
+}
+
+export async function deleteSiteImage(collectionName: "heroSlides" | "advertisements", item: HeroSlide | AdvertisingImage): Promise<void> {
+  if (!isFirebaseConfigured || !db || !storage) throw new Error("Firebase no está configurado")
+  if (item.storagePath) await deleteObject(ref(storage, item.storagePath)).catch(() => undefined)
+  await deleteDoc(doc(db, collectionName, item.id))
+}
+
+export async function updateEventPhotos(event: GalleryEvent, photos: EventPhoto[]): Promise<void> {
+  if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
+  await updateDoc(doc(db, "events", event.id), { photos, coverUrl: photos[0]?.url || "" })
 }
 
 /* -------------------------- Testimonials -------------------------- */
