@@ -1,14 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { site, navLinks, whatsappUrl } from "@/lib/site"
+import Image from "next/image"
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const solidHeader = pathname !== "/"
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -21,30 +25,22 @@ export function SiteHeader() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled
-          ? "border-b border-border bg-background/85 backdrop-blur-md"
+        scrolled || solidHeader
+          ? "border-b border-border bg-background/95 backdrop-blur-md"
           : "border-b border-transparent bg-transparent",
       )}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-        <a href="#inicio" className="flex flex-col leading-none">
-          <span
-            className={cn(
-              "font-serif text-xl font-semibold tracking-tight transition-colors",
-              scrolled ? "text-foreground" : "text-background",
-            )}
-          >
-            {site.shortName}
-          </span>
-          <span
-            className={cn(
-              "text-[10px] font-medium uppercase tracking-[0.25em] transition-colors",
-              scrolled ? "text-muted-foreground" : "text-background/70",
-            )}
-          >
-            Recepciones & Eventos
-          </span>
-        </a>
+        <a href="#inicio" className="flex items-center gap-2">
+  <Image
+    src={scrolled || solidHeader ? "/images/logo-shalom.png" : "/images/logo-shalom-white.png"}
+    alt="Shalom Recepciones & Eventos"
+    width={280}
+    height={100}
+    className="h-14 md:h-16 w-auto object-contain"
+    priority
+  />
+</a>
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
