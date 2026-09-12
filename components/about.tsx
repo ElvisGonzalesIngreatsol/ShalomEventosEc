@@ -29,14 +29,17 @@ export function About() {
           </h2>
           <div className="mt-6 space-y-4 text-pretty leading-relaxed text-muted-foreground">
             <p>
-              Somos Shalom Recepciones & Eventos, un salón dedicado a hacer realidad
-              celebraciones inolvidables. Desde bodas de ensueño hasta XV años, cumpleaños y
-              eventos corporativos, ponemos a tu disposición un espacio elegante y versátil.
+              Shalom Recepciones & Eventos es un salón de eventos dedicado a hacer realidad
+              los sueños de nuestros clientes. Somos una empresa que se esfuerza por crear
+              momentos inolvidables para aquellos que nos eligen para celebrar sus ocasiones especiales.
             </p>
             <p>
-              Nuestro compromiso es cuidar cada detalle para que tú solo te ocupes de disfrutar.
-              Contamos con un equipo experimentado, gastronomía de primer nivel y una atención
-              cercana en cada paso de la organización.
+              Nuestro equipo de expertos en planificación y organización de eventos trabaja
+              incansablemente para ofrecer una experiencia única y personalizada para cada uno de nuestros
+              clientes. Ya sea que esté planeando una boda, un cumpleaños, una graduación o cualquier otra
+              celebración, en Shalom Recepciones & Eventos, nos aseguramos de que cada detalle se maneje
+              con profesionalismo, dedicación y creatividad. ¡Permítanos ser parte de su próxima
+              celebración y hacerla memorable para usted y sus invitados!.
             </p>
           </div>
 
