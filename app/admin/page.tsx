@@ -8,6 +8,7 @@ import { auth, isFirebaseConfigured } from "@/lib/firebase"
 import { fetchEvents, createEvent, deleteEvent, uploadEventPhotos, deleteEventPhoto, updateEventPhotos, fetchAllTestimonials, setTestimonialApproval, deleteTestimonial, uploadSiteImage, fetchHeroSlides, fetchAdvertisements, deleteSiteImage } from "@/lib/data"
 import type { GalleryEvent, Testimonial, HeroSlide, AdvertisingImage } from "@/lib/types"
 import { site } from "@/lib/site"
+import { AdminEventUploader } from "@/components/admin-event-uploader"
 
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null)
@@ -31,7 +32,7 @@ function LoginForm() {
 
 function Dashboard({ user }: { user: User }) {
   const [tab, setTab] = useState<"events" | "testimonials" | "media">("events")
-  return <div className="min-h-screen bg-secondary/40"><header className="border-b border-border bg-card"><div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"><div><p className="font-serif text-lg font-semibold text-primary">Shalom · Admin</p><p className="text-xs text-muted-foreground">{user.email}</p></div><button onClick={() => auth && signOut(auth)} className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-muted"><LogOut className="size-4" />Salir</button></div></header><div className="mx-auto max-w-6xl px-5 py-8"><div className="mb-6 flex flex-wrap gap-2">{([["events", ImageIcon, "Eventos y fotos"], ["media", LayoutTemplate, "Portadas y publicidad"], ["testimonials", MessageSquare, "Opiniones"]] as const).map(([key, Icon, label]) => <button key={key} onClick={() => setTab(key)} className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${tab === key ? "bg-primary text-primary-foreground" : "border border-border bg-card"}`}><Icon className="size-4" />{label}</button>)}</div>{tab === "events" ? <EventsManager /> : tab === "media" ? <MediaManager /> : <TestimonialsManager />}</div></div>
+  return <div className="min-h-screen bg-secondary/40"><header className="border-b border-border bg-card"><div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4"><div><p className="font-serif text-lg font-semibold text-primary">Shalom · Admin</p><p className="text-xs text-muted-foreground">{user.email}</p></div><button onClick={() => auth && signOut(auth)} className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-muted"><LogOut className="size-4" />Salir</button></div></header><div className="mx-auto max-w-6xl px-5 py-8"><div className="mb-6 flex flex-wrap gap-2">{([["events", ImageIcon, "Eventos y fotos"], ["media", LayoutTemplate, "Portadas y publicidad"], ["testimonials", MessageSquare, "Opiniones"]] as const).map(([key, Icon, label]) => <button key={key} onClick={() => setTab(key)} className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${tab === key ? "bg-primary text-primary-foreground" : "border border-border bg-card"}`}><Icon className="size-4" />{label}</button>)}</div>{tab === "events" ? <AdminEventUploader /> : tab === "media" ? <MediaManager /> : <TestimonialsManager />}</div></div>
 }
 
 function EventsManager() {
