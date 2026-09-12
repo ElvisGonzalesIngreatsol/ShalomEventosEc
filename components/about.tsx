@@ -1,7 +1,7 @@
 const stats = [
-  { value: "+12", label: "Años de experiencia" },
-  { value: "+800", label: "Eventos realizados" },
-  { value: "200", label: "Invitados de capacidad" },
+  { value: "+15", label: "Años de experiencia" },
+  { value: "+1000", label: "Eventos realizados" },
+  { value: "200", label: "Capacidad de invitados" },
 ]
 
 export function About() {
@@ -30,7 +30,7 @@ export function About() {
           <div className="mt-6 space-y-4 text-pretty leading-relaxed text-muted-foreground">
             <p>
               Somos Shalom Recepciones & Eventos, un salón dedicado a hacer realidad
-              celebraciones inolvidables. Desde bodas de ensueño hasta XV años, bautizos y
+              celebraciones inolvidables. Desde bodas de ensueño hasta XV años, cumpleaños y
               eventos corporativos, ponemos a tu disposición un espacio elegante y versátil.
             </p>
             <p>

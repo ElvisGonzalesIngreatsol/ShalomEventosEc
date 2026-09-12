@@ -8,7 +8,7 @@ import type { EventPhoto, GalleryEvent } from "@/lib/types"
 
 type PendingPhoto = { file: File; preview: string }
 
-const categories = ["Boda", "XV Años", "Bautizo", "Corporativo", "Otro"]
+const categories = ["Boda", "XV Años", "Cumpleaños", "Corporativo", "Otro"]
 
 export function AdminEventUploader() {
   const { data: events = [], isLoading } = useSWR<GalleryEvent[]>("events", fetchEvents)

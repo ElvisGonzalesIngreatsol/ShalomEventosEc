@@ -26,7 +26,7 @@ import Link from "next/link"
 /*  Page                                                                */
 /* ------------------------------------------------------------------ */
 
-const CATEGORIES = ["Todos", "Boda", "XV Años", "Bautizo", "Corporativo", "Otro"]
+const CATEGORIES = ["Todos", "Boda", "XV Años", "Cumpleaños", "Corporativo", "Otro"]
 
 export default function EventosPage() {
   const { data: events, isLoading } = useSWR<GalleryEvent[]>("events", fetchEvents)
@@ -156,14 +156,14 @@ function AlbumCard({
     <button
       type="button"
       onClick={onClick}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-background text-left transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-background text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       {/* Cover */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
         <img
           src={event.coverUrl || "/placeholder.svg"}
           alt={event.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="size-full object-cover object-center transition-transform duration-300"
         />
         {/* photo count */}
         <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-foreground/60 px-2.5 py-1 text-xs font-semibold text-background backdrop-blur-sm">

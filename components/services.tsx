@@ -4,7 +4,7 @@ import { whatsappUrl } from "@/lib/site"
 const services = [
   {
     icon: UtensilsCrossed,
-    title: "Banquete gourmet",
+    title: "Catering y Banquetes",
     description: "Menús personalizados de tres tiempos, buffet o cena de gala a tu elección.",
   },
   {

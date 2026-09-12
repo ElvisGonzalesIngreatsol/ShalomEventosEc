@@ -1,25 +1,36 @@
 "use client"
 
 import { useActionState, useEffect, useRef } from "react"
-import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2, CheckCircle2, AlertCircle } from "lucide-react"
+import useSWR from "swr"
+import { Mail, Phone, MapPin, Clock, MessageCircle, Loader2, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react"
 import { site, whatsappUrl } from "@/lib/site"
 import { sendContact } from "@/app/actions/send-contact"
+import { fetchContactChannels } from "@/lib/data"
+import { ContactIcon } from "@/components/contact-icon"
+import type { ContactChannel } from "@/lib/types"
+
+import { defaultContactChannels } from "@/lib/sample-data"
 
 export function Contact() {
   const [state, formAction, isPending] = useActionState(sendContact, null)
   const formRef = useRef<HTMLFormElement>(null)
+
+  const { data: channels = [] } = useSWR<ContactChannel[]>(
+    "contact-channels",
+    fetchContactChannels,
+    {
+      fallbackData: defaultContactChannels.filter((c) => c.active),
+    }
+  )
 
   // Limpia el formulario cuando el envío es exitoso
   useEffect(() => {
     if (state?.ok) formRef.current?.reset()
   }, [state])
 
-  const info = [
-    { icon: Phone, label: "Teléfono", value: site.phone, href: `tel:${site.phone.replace(/\s/g, "")}` },
-    { icon: Mail, label: "Email", value: site.email, href: `mailto:${site.email}` },
-    { icon: MapPin, label: "Dirección", value: site.address },
-    { icon: Clock, label: "Horario", value: site.hours },
-  ]
+  // Encuentra si hay canal de WhatsApp configurado
+  const whatsappChannel = channels.find((c) => c.icon === "whatsapp" && c.active)
+  const whatsappLink = whatsappChannel?.url || whatsappUrl("Hola, me gustaría más información sobre Shalom.")
 
   return (
     <section id="contacto" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
@@ -37,34 +48,57 @@ export function Contact() {
           </p>
 
           <a
-            href={whatsappUrl("Hola, me gustaría más información sobre Shalom.")}
+            href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.03]"
+            className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:scale-[1.03] shadow-sm"
           >
-            <MessageCircle className="size-5" />
+            <ContactIcon icon="whatsapp" className="size-5" />
             Escribir por WhatsApp
           </a>
 
-          <dl className="mt-10 grid gap-5 sm:grid-cols-2">
-            {info.map((item) => (
-              <div key={item.label} className="flex items-start gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <item.icon className="size-5" />
-                </div>
-                <div>
-                  <dt className="text-sm text-muted-foreground">{item.label}</dt>
-                  {item.href ? (
-                    <a href={item.href} className="font-medium text-foreground hover:text-primary">
-                      {item.value}
-                    </a>
-                  ) : (
-                    <dd className="font-medium text-foreground">{item.value}</dd>
-                  )}
-                </div>
-              </div>
-            ))}
-          </dl>
+          {/* Canales y Redes dinámicos administrables */}
+          <div className="mt-10">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+              Medios de atención directa y redes
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {channels.map((ch) => (
+                <a
+                  key={ch.id}
+                  href={ch.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3.5 rounded-xl border border-border bg-card/60 p-3.5 transition-all hover:border-primary/40 hover:bg-card hover:shadow-xs"
+                >
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-transform group-hover:scale-110">
+                    <ContactIcon icon={ch.icon} className="size-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                      {ch.title}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {ch.value || ch.url.replace(/^https?:\/\/(www\.)?/, "")}
+                    </p>
+                  </div>
+                  <ExternalLink className="size-3.5 shrink-0 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                </a>
+              ))}
+            </div>
+
+            {/* Horario y Ubicación fija */}
+            <div className="mt-6 flex flex-wrap gap-4 border-t border-border pt-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <MapPin className="size-3.5 text-primary" />
+                {site.address}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="size-3.5 text-primary" />
+                {site.hours}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Contact form (envía correo real vía Resend) */}

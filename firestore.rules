@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Permite lectura pública y escritura solo a usuarios autenticados (admin)
+    match /{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Permite que los clientes puedan enviar opiniones sin iniciar sesión
+    match /testimonials/{document=**} {
+      allow create: if true;
+    }
+  }
+}

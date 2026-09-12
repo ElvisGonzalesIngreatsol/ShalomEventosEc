@@ -1,10 +1,14 @@
 import JSZip from "jszip"
 import type { GalleryEvent } from "@/lib/types"
 
-/** Descarga una sola imagen forzando la descarga (con fallback a nueva pestaña). */
+/** Descarga una sola imagen forzando la descarga directa al dispositivo. */
 export async function downloadImage(url: string, filename: string) {
   try {
-    const res = await fetch(url, { mode: "cors" })
+    // Petición a través del proxy del servidor para evitar problemas de CORS en Firebase
+    const proxyUrl = `/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}`
+    const res = await fetch(proxyUrl)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
     const blob = await res.blob()
     const objectUrl = URL.createObjectURL(blob)
     const a = document.createElement("a")
@@ -13,9 +17,15 @@ export async function downloadImage(url: string, filename: string) {
     document.body.appendChild(a)
     a.click()
     a.remove()
-    URL.revokeObjectURL(objectUrl)
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 2000)
   } catch {
-    window.open(url, "_blank")
+    // Fallback: enlace directo a la ruta de descarga que contiene Content-Disposition: attachment
+    const a = document.createElement("a")
+    a.href = `/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}`
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
   }
 }
 
@@ -57,13 +67,21 @@ export async function downloadAlbum(
   await Promise.all(
     event.photos.map(async (photo, i) => {
       try {
-        const res = await fetch(photo.url, { mode: "cors" })
+        let res: Response
+        try {
+          res = await fetch(photo.url, { mode: "cors" })
+          if (!res.ok) throw new Error("CORS o error directo")
+        } catch {
+          // Si falla CORS directo con Firebase Storage, se pasa por el proxy del servidor
+          res = await fetch(`/api/download?url=${encodeURIComponent(photo.url)}&filename=foto.jpg`)
+        }
+
         const blob = await res.blob()
         const ext = extFromBlob(blob, photo.url)
         const num = String(i + 1).padStart(2, "0")
         folder.file(`${folderName}-${num}.${ext}`, blob)
-      } catch {
-        // Si una foto falla (CORS, red), se omite y seguimos con las demás.
+      } catch (err) {
+        console.error("Error al descargar foto del álbum:", err)
       } finally {
         done += 1
         onProgress?.(done, total)
@@ -79,5 +97,5 @@ export async function downloadAlbum(
   document.body.appendChild(a)
   a.click()
   a.remove()
-  URL.revokeObjectURL(objectUrl)
+  setTimeout(() => URL.revokeObjectURL(objectUrl), 2000)
 }

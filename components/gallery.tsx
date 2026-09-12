@@ -87,13 +87,13 @@ export function AlbumCard({
     <button
       type="button"
       onClick={onClick}
-      className="group relative overflow-hidden rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="group relative overflow-hidden rounded-2xl text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-[3/4] overflow-hidden bg-muted">
         <img
           src={event.coverUrl || "/placeholder.svg"}
           alt={event.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="size-full object-cover object-center transition-all duration-300"
         />
         {/* photo count badge top-right */}
         <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-foreground/60 px-2.5 py-1 text-xs font-semibold text-background backdrop-blur-sm">
@@ -101,19 +101,19 @@ export function AlbumCard({
           {event.photos.length} fotos
         </span>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-5">
         <span className="inline-block rounded-full bg-accent/90 px-3 py-1 text-xs font-semibold text-accent-foreground">
           {event.category}
         </span>
-        <h3 className="mt-2 font-serif text-xl font-semibold leading-snug text-background">
+        <h3 className="mt-2 font-serif text-xl font-semibold leading-snug text-white">
           {event.title}
         </h3>
-        <p className="mt-0.5 text-sm text-background/75">{event.date}</p>
+        <p className="mt-0.5 text-sm text-white/80">{event.date}</p>
       </div>
       {/* hover overlay */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <span className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground">
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-black/25">
+        <span className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground shadow-sm">
           Abrir álbum
         </span>
       </div>
@@ -170,34 +170,41 @@ function Lightbox({ event, onClose }: { event: GalleryEvent; onClose: () => void
       className="fixed inset-0 z-[60] flex flex-col bg-foreground/95 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label={`Fotos de ${event.title}`}
+      aria-label={`Álbum: ${event.title}`}
     >
+      {/* Top bar */}
       <div className="flex items-center justify-between px-5 py-4 lg:px-8">
         <div>
-          <h3 className="font-serif text-lg font-semibold text-background">{event.title}</h3>
-          <p className="text-sm text-background/70">
-            {selected + 1} / {event.photos.length}
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-background/50">
+            {event.category} · {event.date}
           </p>
+          <h3 className="font-serif text-lg font-semibold text-background">{event.title}</h3>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Cerrar galería"
-          className="rounded-full bg-background/10 p-2 text-background transition-colors hover:bg-background/20"
-        >
-          <X className="size-6" />
-        </button>
+        <div className="flex items-center gap-4">
+          <span className="text-sm tabular-nums text-background/60">
+            {selected + 1} / {event.photos.length}
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Cerrar álbum"
+            className="rounded-full bg-background/10 p-2 text-background transition-colors hover:bg-background/20"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
       </div>
 
+      {/* Main carousel view */}
       <div className="relative flex-1 overflow-hidden">
         <div className="h-full" ref={emblaRef}>
           <div className="flex h-full">
-            {event.photos.map((photo) => (
+            {event.photos.map((photo, i) => (
               <div key={photo.id} className="flex h-full min-w-0 flex-[0_0_100%] items-center justify-center p-4">
                 <img
                   src={photo.url || "/placeholder.svg"}
-                  alt={event.title}
-                  className="max-h-full max-w-full rounded-lg object-contain"
+                  alt={`${event.title} — foto ${i + 1}`}
+                  className="max-h-full max-w-full rounded-xl object-contain shadow-2xl"
                 />
               </div>
             ))}
@@ -210,29 +217,56 @@ function Lightbox({ event, onClose }: { event: GalleryEvent; onClose: () => void
               type="button"
               onClick={scrollPrev}
               aria-label="Foto anterior"
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/10 p-2.5 text-background transition-colors hover:bg-background/25"
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/10 p-3 text-background transition-colors hover:bg-background/25"
             >
-              <ChevronLeft className="size-6" />
+              <ChevronLeft className="size-5" />
             </button>
             <button
               type="button"
               onClick={scrollNext}
               aria-label="Foto siguiente"
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/10 p-2.5 text-background transition-colors hover:bg-background/25"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/10 p-3 text-background transition-colors hover:bg-background/25"
             >
-              <ChevronRight className="size-6" />
+              <ChevronRight className="size-5" />
             </button>
           </>
         )}
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-3 px-5 py-5">
+      {/* Thumbnail strip (miniaturas para navegar rápidamente) */}
+      {event.photos.length > 1 && (
+        <div className="flex items-center justify-center gap-2 overflow-x-auto px-5 py-3">
+          {event.photos.map((p, i) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => emblaApi?.scrollTo(i)}
+              aria-label={`Ir a foto ${i + 1}`}
+              className={`size-10 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                i === selected
+                  ? "border-accent opacity-100 scale-110"
+                  : "border-transparent opacity-50 hover:opacity-80"
+              }`}
+            >
+              <img
+                src={p.url || "/placeholder.svg"}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Bottom bar */}
+      <div className="flex flex-wrap items-center justify-center gap-3 px-5 pb-6 pt-2">
         <button
           type="button"
           onClick={() =>
+            event.photos[selected]?.url &&
             downloadImage(
               event.photos[selected].url,
-              `${event.id}-${selected + 1}.jpg`,
+              `${event.id}-foto-${selected + 1}.jpg`,
             )
           }
           className="flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-transform hover:scale-[1.03]"

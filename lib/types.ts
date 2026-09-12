@@ -42,3 +42,26 @@ export type AdvertisingImage = SiteImage & {
   link?: string
   placement: "left" | "right"
 }
+
+export type ContactIconType =
+  | "whatsapp"
+  | "instagram"
+  | "facebook"
+  | "tiktok"
+  | "youtube"
+  | "phone"
+  | "mail"
+  | "mapPin"
+  | "telegram"
+  | "globe"
+
+export type ContactChannel = {
+  id: string
+  icon: ContactIconType
+  title: string
+  value?: string
+  url: string
+  active: boolean
+  order: number
+  createdAt?: number
+}

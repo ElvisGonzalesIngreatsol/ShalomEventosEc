@@ -18,12 +18,13 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: 'Shalom Recepciones & Eventos | Salón de eventos sociales',
   description:
-    'Shalom Recepciones & Eventos: un salón elegante para bodas, XV años, bautizos y eventos corporativos. Conoce nuestros servicios, revive tus eventos en fotos y contáctanos.',
+    'Shalom Recepciones & Eventos: un salón elegante para bodas, XV años, cumpleaños y eventos corporativos. Conoce nuestros servicios, revive tus eventos en fotos y contáctanos.',
   generator: 'v0.app',
   keywords: [
     'salón de eventos',
     'bodas',
     'XV años',
+    'cumpleaños',
     'recepciones',
     'eventos sociales',
     'Shalom Recepciones',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Shalom Recepciones & Eventos',
     description:
-      'Un salón elegante para tus momentos más importantes. Bodas, XV años, bautizos y eventos corporativos.',
+      'Un salón elegante para tus momentos más importantes. Bodas, XV años, cumpleaños y eventos corporativos.',
     type: 'website',
   },
 }
