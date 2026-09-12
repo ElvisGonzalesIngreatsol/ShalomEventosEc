@@ -36,6 +36,14 @@ export async function createEvent(
   return docRef.id
 }
 
+export async function updateEventDetails(
+  id: string,
+  data: Pick<GalleryEvent, "title" | "category" | "date">,
+): Promise<void> {
+  if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
+  await updateDoc(doc(db, "events", id), data)
+}
+
 export async function deleteEvent(id: string): Promise<void> {
   if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
   await deleteDoc(doc(db, "events", id))
