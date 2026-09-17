@@ -1,6 +1,7 @@
 import {
   collection,
   getDocs,
+  getDoc,
   addDoc,
   doc,
   setDoc,
@@ -19,6 +20,7 @@ import type {
   AdvertisingImage,
   ContactChannel,
   ContactIconType,
+  AboutSettings,
 } from "./types"
 import { sampleEvents, sampleTestimonials, defaultContactChannels } from "./sample-data"
 
@@ -524,4 +526,75 @@ export async function toggleContactChannelActive(id: string, active: boolean): P
 export async function deleteContactChannel(id: string): Promise<void> {
   if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
   await deleteDoc(doc(db, "contactChannels", id))
+}
+
+/* -------------------------- Sección Nosotros (About) -------------------------- */
+
+export const defaultAboutSettings: AboutSettings = {
+  imageUrl: "/images/about-venue.png",
+  foundingYear: 2010,
+  eventsCount: 1000,
+  capacity: 200,
+}
+
+export async function fetchAboutSettings(): Promise<AboutSettings> {
+  if (!isFirebaseConfigured || !db) return defaultAboutSettings
+
+  try {
+    const snap = await getDoc(doc(db, "siteSettings", "about"))
+    if (!snap.exists()) {
+      return defaultAboutSettings
+    }
+    const data = snap.data()
+    return {
+      imageUrl: data.imageUrl || defaultAboutSettings.imageUrl,
+      imageStoragePath: data.imageStoragePath || "",
+      foundingYear: typeof data.foundingYear === "number" ? data.foundingYear : defaultAboutSettings.foundingYear,
+      eventsCount: typeof data.eventsCount === "number" ? data.eventsCount : defaultAboutSettings.eventsCount,
+      capacity: typeof data.capacity === "number" ? data.capacity : defaultAboutSettings.capacity,
+      updatedAt: data.updatedAt,
+    }
+  } catch (e) {
+    console.error("Error al obtener configuración de Nosotros:", e)
+    return defaultAboutSettings
+  }
+}
+
+export async function updateAboutSettings(
+  data: Partial<Omit<AboutSettings, "updatedAt">>,
+  newFile?: File | null,
+  currentStoragePath?: string
+): Promise<AboutSettings> {
+  if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
+
+  let imageUrl = data.imageUrl
+  let imageStoragePath = currentStoragePath
+
+  if (newFile && storage) {
+    // Si hay archivo previo en Firebase Storage y sube uno nuevo, eliminar el anterior
+    if (currentStoragePath) {
+      await deleteObject(ref(storage, currentStoragePath)).catch(() => undefined)
+    }
+
+    const path = `site/about/${Date.now()}-${newFile.name}`
+    const storageRef = ref(storage, path)
+    await uploadBytes(storageRef, newFile)
+    imageUrl = await getDownloadURL(storageRef)
+    imageStoragePath = path
+  }
+
+  const payload: Partial<AboutSettings> & { updatedAt: number } = {
+    ...data,
+    updatedAt: Date.now(),
+  }
+
+  if (imageUrl) payload.imageUrl = imageUrl
+  if (imageStoragePath) payload.imageStoragePath = imageStoragePath
+
+  await setDoc(doc(db, "siteSettings", "about"), payload, { merge: true })
+
+  return {
+    ...defaultAboutSettings,
+    ...payload,
+  } as AboutSettings
 }

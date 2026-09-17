@@ -378,6 +378,13 @@ export function AdminMediaManager() {
               </div>
             </div>
 
+            <div className="mt-4 flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3.5 py-2.5 text-xs text-accent-foreground">
+              <Sparkles className="size-4 shrink-0" />
+              <span>
+                <strong>Tamaño de referencia recomendado:</strong> 1920 × 1080 px (Panorámica 16:9 de alta resolución) para que se aprecie nítida en pantallas de computadora y teléfonos celulares.
+              </span>
+            </div>
+
             <div className="mt-5 space-y-4">
               <div>
                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -417,7 +424,7 @@ export function AdminMediaManager() {
                   Haz clic para elegir fotos o arrástralas aquí
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Puedes seleccionar varias fotos a la vez para tu portada
+                  Formato recomendado: 1920 × 1080 px (16:9). Puedes seleccionar varias fotos a la vez.
                 </p>
               </div>
 
@@ -682,11 +689,16 @@ export function AdminMediaManager() {
 
                 {/* Cambio de imagen opcional */}
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Cambiar imagen (opcional)
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Cambiar imagen (opcional)
+                    </label>
+                    <span className="text-[11px] text-muted-foreground">
+                      Recomendado: Cuadrada 1:1 (ej. 800 × 800 px)
+                    </span>
+                  </div>
                   <div className="flex flex-wrap items-center gap-4">
-                    <div className="size-20 overflow-hidden rounded-xl border border-border bg-black/10">
+                    <div className="size-20 aspect-square overflow-hidden rounded-xl border border-border bg-black/10">
                       <img
                         src={editAdNewFile ? URL.createObjectURL(editAdNewFile) : currentEditingAd.url}
                         alt="Vista previa"
@@ -733,20 +745,19 @@ export function AdminMediaManager() {
                   </div>
                 )}
 
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex justify-end gap-2 border-t border-accent/20 pt-3">
                   <button
                     type="button"
                     onClick={cancelEditingAd}
-                    disabled={isSavingAdEdit}
-                    className="rounded-full border border-border bg-background px-5 py-2.5 text-sm font-semibold hover:bg-muted"
+                    className="rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-muted"
                   >
                     Cancelar
                   </button>
                   <button
                     type="button"
                     onClick={handleSaveAdEdit}
-                    disabled={isSavingAdEdit || !editAdTitle.trim()}
-                    className="flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm hover:opacity-90 disabled:opacity-50"
+                    disabled={isSavingAdEdit}
+                    className="flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-xs font-semibold text-accent-foreground shadow-sm hover:opacity-90 disabled:opacity-50"
                   >
                     {isSavingAdEdit ? (
                       <>
@@ -772,11 +783,18 @@ export function AdminMediaManager() {
                 <Megaphone className="size-5" />
               </div>
               <div>
-                <h3 className="font-serif text-xl font-bold">Añadir publicidad lateral</h3>
+                <h3 className="font-serif text-xl font-bold">Añadir publicidad (Escritorio y Móviles)</h3>
                 <p className="text-sm text-muted-foreground">
-                  Sube 2 o 3 fotos para cada lateral (Izquierda o Derecha) para aprovechar pantallas anchas.
+                  Sube anuncios que se mostrarán en computadoras (rieles laterales) y en teléfonos celulares.
                 </p>
               </div>
+            </div>
+
+            <div className="mt-4 flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3.5 py-2.5 text-xs text-accent-foreground">
+              <Sparkles className="size-4 shrink-0" />
+              <span>
+                <strong>Tamaño de referencia recomendado:</strong> Formato Cuadrado 1:1 (ej. 800 × 800 px o 600 × 600 px, mín. 400 × 400 px) para que el anuncio se aprecie nítido y completo sin recortes.
+              </span>
             </div>
 
             <div className="mt-5 space-y-4">
@@ -843,7 +861,7 @@ export function AdminMediaManager() {
                   Seleccionar fotos para {adPlacement === "left" ? "Lado Izquierdo" : "Lado Derecho"}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Formato vertical recomendado (3:4 o similar)
+                  Formato cuadrado 1:1 recomendado (ej. 800 × 800 px o 600 × 600 px)
                 </p>
               </div>
 
@@ -962,7 +980,7 @@ export function AdminMediaManager() {
                             : "border-border/60 bg-muted/30 opacity-70"
                       }`}
                     >
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-black/10">
+                      <div className="relative aspect-square w-full overflow-hidden bg-black/10">
                         <img src={item.url} alt={item.title} className="size-full object-cover" />
                         <span className="absolute left-2.5 top-2.5 rounded-full bg-black/70 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-xs">
                           {item.placement === "left" ? "Lado Izquierdo" : "Lado Derecho"}

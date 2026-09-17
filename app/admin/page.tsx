@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react"
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, type User } from "firebase/auth"
 import useSWR, { mutate } from "swr"
-import { Loader2, LogOut, Plus, Upload, Trash2, Check, X, ImageIcon, MessageSquare, AlertTriangle, Eye, EyeOff, GripVertical, LayoutTemplate, Megaphone, Share2 } from "lucide-react"
+import { Loader2, LogOut, Plus, Upload, Trash2, Check, X, ImageIcon, MessageSquare, AlertTriangle, Eye, EyeOff, GripVertical, LayoutTemplate, Megaphone, Share2, Users } from "lucide-react"
 import { auth, isFirebaseConfigured } from "@/lib/firebase"
 import { fetchEvents, createEvent, deleteEvent, uploadEventPhotos, deleteEventPhoto, updateEventPhotos, fetchAllTestimonials, setTestimonialApproval, deleteTestimonial, uploadSiteImage, fetchHeroSlides, fetchAdvertisements, deleteSiteImage } from "@/lib/data"
 import type { GalleryEvent, Testimonial, HeroSlide, AdvertisingImage } from "@/lib/types"
 import { site } from "@/lib/site"
 import { AdminEventsManager } from "@/components/admin-events-manager"
 import { AdminMediaManager } from "@/components/admin-media-manager"
+import { AdminAboutManager } from "@/components/admin-about-manager"
 import { AdminTestimonialsManager } from "@/components/admin-testimonials-manager"
 import { AdminContactManager } from "@/components/admin-contact-manager"
 import { showConfirmAlert, showErrorAlert } from "@/lib/alerts"
@@ -49,7 +50,7 @@ function LoginForm() {
 }
 
 function Dashboard({ user }: { user: User }) {
-  const [tab, setTab] = useState<"events" | "testimonials" | "media" | "contact">("events")
+  const [tab, setTab] = useState<"events" | "media" | "about" | "testimonials" | "contact">("events")
 
   const handleSignOut = async () => {
     const isConfirmed = await showConfirmAlert({
@@ -86,6 +87,7 @@ function Dashboard({ user }: { user: User }) {
           {([
             ["events", ImageIcon, "Eventos y fotos"],
             ["media", LayoutTemplate, "Portadas y publicidad"],
+            ["about", Users, "Nosotros"],
             ["testimonials", MessageSquare, "Opiniones"],
             ["contact", Share2, "Redes y Contacto"],
           ] as const).map(([key, Icon, label]) => (
@@ -107,6 +109,8 @@ function Dashboard({ user }: { user: User }) {
           <AdminEventsManager />
         ) : tab === "media" ? (
           <AdminMediaManager />
+        ) : tab === "about" ? (
+          <AdminAboutManager />
         ) : tab === "testimonials" ? (
           <AdminTestimonialsManager />
         ) : (

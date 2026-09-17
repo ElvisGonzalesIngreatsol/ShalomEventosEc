@@ -20,6 +20,7 @@ import type { GalleryEvent } from "@/lib/types"
 import { downloadImage, downloadAlbum } from "@/lib/download"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { AdvertisingRails } from "@/components/advertising-rails"
 import Link from "next/link"
 
 /* ------------------------------------------------------------------ */
@@ -46,6 +47,7 @@ export default function EventosPage() {
   return (
     <>
       <SiteHeader />
+      <AdvertisingRails immediate />
       <main className="min-h-screen pt-24 pb-20">
         {/* ---- Header section ---- */}
         <div className="mx-auto max-w-7xl px-5 lg:px-8">

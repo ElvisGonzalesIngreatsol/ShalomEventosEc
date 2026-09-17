@@ -458,6 +458,16 @@ export function AdminEventsManager() {
               </p>
             </div>
 
+            <div className="flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3.5 py-2.5 text-xs text-accent-foreground">
+              <Sparkles className="size-4 shrink-0 mt-0.5" />
+              <div>
+                <strong>Foto de portada del álbum:</strong> La primera imagen (<span className="font-bold">★ Portada</span>) se usará como carátula del evento en la galería.
+                <p className="mt-0.5 text-muted-foreground">
+                  <strong>Tamaño recomendado:</strong> 1200 × 800 px o proporción horizontal 4:3 / 16:9. Arrastra las fotos para elegir cuál será la portada.
+                </p>
+              </div>
+            </div>
+
             {/* Grilla con Drag and Drop */}
             {newPhotos.length > 0 && (
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
@@ -694,6 +704,14 @@ export function AdminEventsManager() {
                 <p className="mt-1 text-xs font-semibold text-foreground">
                   Haz clic o arrastra más fotos para agregarlas a este evento
                 </p>
+              </div>
+
+              <div className="flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-3.5 py-2 text-xs text-accent-foreground">
+                <Sparkles className="size-4 shrink-0 mt-0.5" />
+                <div>
+                  <strong>Portada del álbum:</strong> La primera foto (<span className="font-bold">★ Portada</span>) es la que se muestra en la web.
+                  <span className="block mt-0.5 text-muted-foreground">Tamaño recomendado: <strong>1200 × 800 px</strong> o proporción 4:3 / 16:9. Arrastra las fotos para cambiar la portada.</span>
+                </div>
               </div>
 
               {/* Grilla de reordenamiento drag & drop */}

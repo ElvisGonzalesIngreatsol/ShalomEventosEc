@@ -1,18 +1,33 @@
-const stats = [
-  { value: "+15", label: "Años de experiencia" },
-  { value: "+1000", label: "Eventos realizados" },
-  { value: "200", label: "Capacidad de invitados" },
-]
+"use client"
+
+import useSWR from "swr"
+import { fetchAboutSettings, defaultAboutSettings } from "@/lib/data"
+import type { AboutSettings } from "@/lib/types"
 
 export function About() {
+  const { data = defaultAboutSettings } = useSWR<AboutSettings>("about-settings", fetchAboutSettings)
+
+  // El número de años de experiencia se incrementa automáticamente cada año nuevo
+  const currentYear = new Date().getFullYear()
+  const foundingYear = data.foundingYear || 2010
+  const yearsOfExperience = Math.max(1, currentYear - foundingYear)
+
+  const stats = [
+    { value: `+${yearsOfExperience}`, label: "Años de experiencia" },
+    { value: `+${data.eventsCount ?? 1000}`, label: "Eventos realizados" },
+    { value: `${data.capacity ?? 200}`, label: "Capacidad de invitados" },
+  ]
+
+  const imageUrl = data.imageUrl || "/images/about-venue.png"
+
   return (
     <section id="nosotros" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="relative">
           <img
-            src="/images/about-venue.png"
+            src={imageUrl}
             alt="Interior del salón de eventos Shalom"
-            className="aspect-[4/5] w-full rounded-2xl object-cover"
+            className="aspect-[4/5] w-full rounded-2xl object-cover shadow-md"
           />
           <div className="absolute -bottom-6 -right-4 hidden rounded-2xl border border-border bg-card p-6 shadow-lg sm:block lg:-right-8">
             <p className="font-serif text-3xl font-semibold text-primary">Shalom</p>

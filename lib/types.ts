@@ -65,3 +65,12 @@ export type ContactChannel = {
   order: number
   createdAt?: number
 }
+
+export type AboutSettings = {
+  imageUrl?: string
+  imageStoragePath?: string
+  foundingYear: number // Año de inicio para calcular experiencia (ej. 2010 -> +15 años)
+  eventsCount: number // Número de eventos realizados (ej. 1000 -> +1000)
+  capacity: number // Capacidad de invitados (ej. 200)
+  updatedAt?: number
+}
