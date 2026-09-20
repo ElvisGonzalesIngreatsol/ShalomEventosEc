@@ -902,7 +902,7 @@ export function AdminMediaManager() {
                     </label>
                     <span className="text-[11px] text-muted-foreground">
                       {editAdTarget === "desktop"
-                        ? "📐 Recomendado tira web: 600 × 1200 px o 600 × 900 px (1:2 o 9:16)"
+                        ? "📐 Recomendado tira web: 600 × 1600 px o 600 × 1400 px (Proporción vertical alargada ~1:2.5)"
                         : "📐 Recomendado móvil emergente: 1080 × 1350 px (4:5) o 800 × 800 px (1:1)"}
                     </span>
                   </div>
@@ -1060,7 +1060,7 @@ export function AdminMediaManager() {
                 <div>
                   <strong>📐 Tamaño de referencia recomendado para Web / Computadora (Tira lateral larga):</strong>
                   <p className="mt-0.5 text-accent-foreground/90">
-                    Formato <strong>vertical alargado</strong>: <strong>600 × 1200 px</strong> o <strong>600 × 900 px</strong> (Proporción 1:2 o 9:16) para que llene la tira lateral de manera limpia y nítida.
+                    Formato <strong>vertical alargado (tira larga)</strong>: <strong>600 × 1600 px</strong> o <strong>600 × 1400 px</strong> (Proporción aprox. 1:2.5) para que llene la tira lateral de arriba a abajo de manera limpia y nítida.
                   </p>
                 </div>
               ) : (
@@ -1152,7 +1152,7 @@ export function AdminMediaManager() {
                 <p className="text-xs text-muted-foreground">
                   {adTarget === "mobile"
                     ? "Recomendado: 1080 × 1350 px (4:5) o 800 × 800 px (1:1)"
-                    : "Recomendado: 600 × 1200 px o 600 × 900 px (Tira vertical larga)"}
+                    : "Recomendado: 600 × 1600 px o 600 × 1400 px (Tira vertical larga)"}
                 </p>
               </div>
 

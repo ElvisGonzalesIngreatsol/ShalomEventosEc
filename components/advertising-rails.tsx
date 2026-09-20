@@ -60,14 +60,14 @@ function DesktopRail({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       className={cn(
-        "fixed top-24 z-30 hidden flex-col gap-2 min-[1460px]:flex transition-all duration-500 ease-in-out",
+        "fixed top-20 z-30 hidden flex-col gap-2 min-[1460px]:flex transition-all duration-500 ease-in-out",
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 -translate-y-6 pointer-events-none",
         side === "left"
           ? "left-2 min-[1600px]:left-5"
           : "right-2 min-[1600px]:right-5",
-        // Tira más ancha que antes (w-56 a w-64)
+        // Tira ancha (w-56 a w-64)
         "w-56 min-[1600px]:w-64"
       )}
     >
@@ -128,8 +128,8 @@ function DesktopRail({
           className="relative block w-full overflow-hidden"
           title={activeItem.title || "Ver publicidad"}
         >
-          {/* Contenedor vertical alargado (tira alta) */}
-          <div className="relative aspect-[9/16] max-h-[72vh] w-full overflow-hidden bg-muted/60">
+          {/* Contenedor vertical alargado y alto (tira larga) */}
+          <div className="relative h-[620px] min-[1600px]:h-[720px] max-h-[82vh] w-full overflow-hidden bg-muted/60">
             <img
               key={activeItem.id}
               src={activeItem.url}
