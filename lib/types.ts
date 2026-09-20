@@ -38,10 +38,20 @@ export type HeroSlide = SiteImage & {
   subtitle?: string
 }
 
+export type AdTarget = "desktop" | "mobile"
+
 export type AdvertisingImage = SiteImage & {
   link?: string
-  placement: "left" | "right"
+  target?: AdTarget
+  placement?: "left" | "right" | "mobile"
 }
+
+export type AdSettings = {
+  desktopIntervalSeconds: number
+  mobileIntervalSeconds: number
+  updatedAt?: number
+}
+
 
 export type ContactIconType =
   | "whatsapp"

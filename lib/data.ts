@@ -18,6 +18,8 @@ import type {
   EventPhoto,
   HeroSlide,
   AdvertisingImage,
+  AdTarget,
+  AdSettings,
   ContactChannel,
   ContactIconType,
   AboutSettings,
@@ -232,16 +234,76 @@ export async function uploadMultipleHeroSlides(files: File[], title?: string): P
   }
 }
 
+export const defaultAdSettings: AdSettings = {
+  desktopIntervalSeconds: 2,
+  mobileIntervalSeconds: 2,
+}
+
+export async function fetchAdSettings(): Promise<AdSettings> {
+  if (!isFirebaseConfigured || !db) return defaultAdSettings
+  try {
+    const snap = await getDoc(doc(db, "siteSettings", "advertisements"))
+    if (!snap.exists()) return defaultAdSettings
+    const data = snap.data()
+    return {
+      desktopIntervalSeconds:
+        typeof data.desktopIntervalSeconds === "number" && data.desktopIntervalSeconds > 0
+          ? data.desktopIntervalSeconds
+          : defaultAdSettings.desktopIntervalSeconds,
+      mobileIntervalSeconds:
+        typeof data.mobileIntervalSeconds === "number" && data.mobileIntervalSeconds > 0
+          ? data.mobileIntervalSeconds
+          : defaultAdSettings.mobileIntervalSeconds,
+      updatedAt: data.updatedAt,
+    }
+  } catch (e) {
+    console.error("Error fetching ad settings:", e)
+    return defaultAdSettings
+  }
+}
+
+export async function updateAdSettings(settings: Partial<AdSettings>): Promise<AdSettings> {
+  if (!isFirebaseConfigured || !db) return defaultAdSettings
+  const payload: Partial<AdSettings> & { updatedAt: number } = {
+    ...settings,
+    updatedAt: Date.now(),
+  }
+  await setDoc(doc(db, "siteSettings", "advertisements"), payload, { merge: true })
+  return fetchAdSettings()
+}
+
 export async function fetchAdvertisements(): Promise<AdvertisingImage[]> {
   if (!isFirebaseConfigured || !db) return []
   const snap = await getDocs(query(collection(db, "advertisements"), orderBy("order", "asc")))
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<AdvertisingImage, "id">) })).filter((a) => a.active)
+  return snap.docs
+    .map((d) => {
+      const data = d.data() as Omit<AdvertisingImage, "id">
+      const target: AdTarget = data.target || (data.placement === "mobile" ? "mobile" : "desktop")
+      const placement = target === "mobile" ? "mobile" : (data.placement === "right" ? "right" : "left")
+      return {
+        id: d.id,
+        ...data,
+        target,
+        placement,
+      } as AdvertisingImage
+    })
+    .filter((a) => a.active)
 }
 
 export async function fetchAllAdvertisementsAdmin(): Promise<AdvertisingImage[]> {
   if (!isFirebaseConfigured || !db) return []
   const snap = await getDocs(query(collection(db, "advertisements"), orderBy("order", "asc")))
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<AdvertisingImage, "id">) }))
+  return snap.docs.map((d) => {
+    const data = d.data() as Omit<AdvertisingImage, "id">
+    const target: AdTarget = data.target || (data.placement === "mobile" ? "mobile" : "desktop")
+    const placement = target === "mobile" ? "mobile" : (data.placement === "right" ? "right" : "left")
+    return {
+      id: d.id,
+      ...data,
+      target,
+      placement,
+    } as AdvertisingImage
+  })
 }
 
 export async function toggleAdvertisementActive(id: string, active: boolean): Promise<void> {
@@ -252,9 +314,10 @@ export async function toggleAdvertisementActive(id: string, active: boolean): Pr
 export async function updateAdvertisement(
   id: string,
   data: {
-    title: string
-    placement: "left" | "right"
-    link: string
+    title?: string
+    target?: AdTarget
+    placement?: "left" | "right" | "mobile"
+    link?: string
     active?: boolean
   },
   newFile?: File | null,
@@ -262,10 +325,14 @@ export async function updateAdvertisement(
 ): Promise<void> {
   if (!isFirebaseConfigured || !db) throw new Error("Firebase no está configurado")
 
+  const target: AdTarget = data.target || (data.placement === "mobile" ? "mobile" : "desktop")
+  const placement = target === "mobile" ? "mobile" : (data.placement === "right" ? "right" : "left")
+
   let updatePayload: Record<string, any> = {
-    title: data.title.trim(),
-    placement: data.placement,
-    link: data.link.trim(),
+    title: (data.title ?? "").trim(),
+    target,
+    placement,
+    link: (data.link ?? "").trim(),
   }
   if (typeof data.active === "boolean") {
     updatePayload.active = data.active
@@ -289,7 +356,8 @@ export async function updateAdvertisement(
 
 export async function uploadMultipleAdvertisements(
   files: File[],
-  placement: "left" | "right",
+  target: AdTarget,
+  placement?: "left" | "right" | "mobile",
   title?: string,
   link?: string,
 ): Promise<void> {
@@ -297,6 +365,7 @@ export async function uploadMultipleAdvertisements(
 
   const current = await fetchAllAdvertisementsAdmin()
   const startingOrder = current.length
+  const resolvedPlacement = target === "mobile" ? "mobile" : (placement === "right" ? "right" : "left")
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
@@ -304,13 +373,15 @@ export async function uploadMultipleAdvertisements(
     const storageRef = ref(storage, path)
     await uploadBytes(storageRef, file)
     const url = await getDownloadURL(storageRef)
-    const itemTitle = title?.trim() ? `${title.trim()} ${i + 1}` : file.name.replace(/\.[^/.]+$/, "")
+    // El título o marca ya NO es obligatorio
+    const itemTitle = title?.trim() ? (files.length > 1 ? `${title.trim()} ${i + 1}` : title.trim()) : ""
 
     await addDoc(collection(db, "advertisements"), {
       title: itemTitle,
       url,
       storagePath: path,
-      placement,
+      target,
+      placement: resolvedPlacement,
       link: link?.trim() || "",
       active: true,
       order: startingOrder + i,
